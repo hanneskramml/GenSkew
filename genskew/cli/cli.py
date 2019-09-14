@@ -1,6 +1,6 @@
 import argparse
 from genskew.cli import log
-from genskew.lib import create_plot
+from genskew.lib import GenSkew
 
 
 def main():

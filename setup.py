@@ -20,7 +20,7 @@ setup(
         'biopython'
     ],
     extras_require={
-        'WebGUI': ['genskew.web', 'flask']
+        'WebGUI': ['genskew.web', 'flask', 'bootstrap-flask', 'flask-kvsession', 'flask-wtf']
     },
     entry_points={'console_scripts': ['genskew = genskew.cli.cli:main']}
 )

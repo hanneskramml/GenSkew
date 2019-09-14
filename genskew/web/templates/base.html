@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GenSkew: {% block title %}(no title){% endblock %}</title>
+    {{ bootstrap.load_css() }}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+    <a class="navbar-brand" href="{{ url_for('index') }}"><i class="fas fa-dna text-primary"></i> GenSkew</a>
+    <ul class="navbar-nav mr-auto">
+        {% for item in navitems %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('show_tab', id=item.id) }}"><i class="fas fa-file-contract"></i> {{ item.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-outline-primary" href="{{ url_for('new_tab') }}">New Sequence(s)...</a>
+</nav>
+<div class="container-fluid" style="margin-top:80px">
+    {% block content %}{% endblock %}
+    <footer class="text-center border-top">
+        <small> &copy; 2019 CUBE / Hannes Kramml</small>
+    </footer>
+</div>
+{{ bootstrap.load_js() }}
+</body>
+</html>

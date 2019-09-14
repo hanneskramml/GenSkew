@@ -1,0 +1,11 @@
+{%- extends "base.html" %}
+
+{% block title %}{{ tab.title }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% for seq in tab.sequences.values() %}
+            {{ seq.desc }}
+        {% endfor %}
+    </div>
+{% endblock %}
