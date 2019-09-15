@@ -9,10 +9,10 @@ from genskew.input import SeqLoader
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', navitems=__get_nav_items())
+    return render_template('index.html', navitems=__get_nav_items(), newTabForm=NewTabForm())
 
 
-@app.route('/new', methods=['GET', 'POST'])
+@app.route('/new', methods=['POST'])
 def new_tab():
     form = NewTabForm()
 
@@ -28,14 +28,14 @@ def new_tab():
         session[tab.id] = json.dumps(tab.__dict__)
         return redirect(url_for('show_tab', id=tab.id))
 
-    return render_template('new.html', navitems=__get_nav_items(), form=form)
+    return redirect(url_for('index', navitems=__get_nav_items(), newTabForm=form))
 
 
 @app.route('/tab/<id>', methods=['GET'])
 def show_tab(id):
     data = session.get(id, None)
     if data is not None:
-        return render_template('tab.html', navitems=__get_nav_items(), tab=json.loads(data))
+        return render_template('tab.html', navitems=__get_nav_items(), tab=json.loads(data), newTabForm=NewTabForm())
     else:
         return redirect(url_for('index'))
 
