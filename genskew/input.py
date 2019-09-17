@@ -10,6 +10,7 @@ class SeqLoader:
             self.id = id
             self.name = None
             self.desc = None
+            self.enabled = True
             self.len = 0
             self.alphabet = None
             self.data = ''

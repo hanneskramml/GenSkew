@@ -2,7 +2,7 @@ import json
 from io import TextIOWrapper
 from flask import render_template, redirect, url_for, session, request
 from genskew.web import app
-from genskew.web.model import Tab
+from genskew.web.model import Tab, Settings
 from genskew.web.forms import NewTabForm
 from genskew.input import SeqLoader
 
@@ -25,19 +25,40 @@ def new_tab():
         for seq in SeqLoader.parse(TextIOWrapper(file)):
             tab.sequences[seq.id] = seq.__dict__
 
+        tab.settings = Settings().__dict__
         session[tab.id] = json.dumps(tab.__dict__)
         return redirect(url_for('show_tab', id=tab.id))
 
     return redirect(url_for('index', navitems=__get_nav_items(), newTabForm=form))
 
 
-@app.route('/tab/<id>', methods=['GET'])
+@app.route('/tab/<id>', methods=['GET', 'POST'])
 def show_tab(id):
     data = session.get(id, None)
-    if data is not None:
-        return render_template('tab.html', navitems=__get_nav_items(), tab=json.loads(data), newTabForm=NewTabForm())
-    else:
+    if data is None:
         return redirect(url_for('index'))
+
+    tab = json.loads(data)
+
+    if request.method == 'POST':
+        for seq in tab['sequences'].keys():
+            if request.form.get(seq):
+                tab['sequences'][seq]['enabled'] = True
+            else:
+                tab['sequences'][seq]['enabled'] = False
+
+        tab['settings']['n1'] = request.form.get('n1')
+        tab['settings']['n2'] = request.form.get('n2')
+
+        if request.form.get('windowsize'):
+            tab['settings']['windowsize'] = request.form.get('windowsize')
+
+        if request.form.get('stepsize'):
+            tab['settings']['stepsize'] = request.form.get('stepsize')
+
+        session[id] = json.dumps(tab)
+
+    return render_template('tab.html', navitems=__get_nav_items(), tab=tab, newTabForm=NewTabForm())
 
 
 @app.route('/tab/<id>/delete', methods=['GET'])

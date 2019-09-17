@@ -7,7 +7,9 @@ from genskew.config import Config
 class GenSkew:
 
     @staticmethod
-    def plot(seqfile, n1='G', n2='C', window=Config.DEFAULT_WINDOWSIZE, step=Config.DEFAULT_STEPSIZE, output='plot.png'):
+    def plot(seqfile, n1=Config.DEFAULT_N1, n2=Config.DEFAULT_N2, window=Config.DEFAULT_WINDOWSIZE,
+             step=Config.DEFAULT_STEPSIZE, output='plot.png'):
+
         skew_data = {}
         for seq in SeqLoader.parse(seqfile):
             skew_data[seq.id] = compute_skew_data(seq.data, n1, n2, window, step)

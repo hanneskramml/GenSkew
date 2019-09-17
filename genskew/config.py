@@ -6,6 +6,8 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     DEFAULT_WINDOWSIZE = 1000
     DEFAULT_STEPSIZE = 1000
+    DEFAULT_N1 = 'G'
+    DEFAULT_N2 = 'C'
 
     ### genskew.web configuration ###
     SECRET_KEY = os.environ.get('SECRET_KEY')

@@ -3,9 +3,37 @@
 {% block title %}{{ tab.title }}{% endblock %}
 
 {% block content %}
-    <div class="container">
-        {% for seq in tab.sequences.values() %}
-            {{ seq.desc }}
-        {% endfor %}
+    <div id="content" class="container">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h2>{{ tab.title }}</h2>
+            </div>
+            <div>
+                <span class="badge badge-primary float-right">{{ tab.sequences|length }} sequence(s)</span><br>
+                <p>Created on: {{ tab.timestamp }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#settings">Settings</a>
+            </div>
+            <div id="settings" class="collapse show" data-parent="#content">
+                <div class="card-body">
+                    {% include 'tab_settings.html' %}
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <a class="card-link" data-toggle="collapse" href="#plot">Plot</a>
+            </div>
+            <div id="plot" class="collapse" data-parent="#content">
+                <div class="card-body">
+                    
+                </div>
+            </div>
+        </div>
+        <br>
     </div>
 {% endblock %}
