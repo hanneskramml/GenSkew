@@ -39,13 +39,14 @@ class PlotData(object):
         self.skew_cumulative = []
         self.contig_separators = []
         self.content = 0
+        self.len = 0
 
     def get_plot_data(self):
         skew_normal = []
         skew_cumulative = []
 
         for i in range(0, len(self.seq_position)):
-            skew_normal.append({'x': self.seq_position[i], 'y': self.skew_normal[i]})
-            skew_cumulative.append({'x': self.seq_position[i], 'y': self.skew_cumulative[i]})
+            skew_normal.append({'x': self.seq_position[i], 'y': round(self.skew_normal[i], 3)})
+            skew_cumulative.append({'x': self.seq_position[i], 'y': round(self.skew_cumulative[i], 3)})
 
         return {'skew_normal': skew_normal, 'skew_cumulative': skew_cumulative}

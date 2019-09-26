@@ -28,7 +28,6 @@ def new_tab():
 
         seqlen = 0
         for seq in SeqLoader.parse(TextIOWrapper(file)):
-            #tab.sequences[seq.id] = seq.__dict__
             seqlen += seq.len
             tab.sequences.append(seq.__dict__)
 
@@ -69,6 +68,8 @@ def show_tab(id):
     pseudo_contig = ''.join(seq_recs)
 
     plot = PlotData()
+    plot.len = len(pseudo_contig)
+
     for i in range(0, len(seq_recs[1:])):
         if i == 0:
             plot.contig_separators.append(len(seq_recs[i]) + 1)
@@ -84,8 +85,8 @@ def show_tab(id):
     return render_template('tab.html', navitems=__get_nav_items(), tab=tab, newTabForm=NewTabForm(), plot=json.dumps(plot.get_plot_data()))
 
 
-@app.route('/tab/<id>/plot.png', methods=['GET'])
-def plot_data(id):
+@app.route('/tab/<id>/plot', methods=['GET'])
+def download_plot(id):
     data = session.get(id, None)
     if data is None:
         # TODO: show error (session expired?)
@@ -93,7 +94,7 @@ def plot_data(id):
 
     tab = json.loads(data)
 
-    fig = Figure()
+    fig = Figure(dpi=150)
     utils.draw_figure(fig, tab['plot']['seq_position'], tab['plot']['skew_normal'], tab['plot']['skew_cumulative'],
                       tab['plot']['contig_separators'])
 

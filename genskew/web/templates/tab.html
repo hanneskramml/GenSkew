@@ -35,8 +35,28 @@
             </div>
             <div id="plot" class="collapse show">
                 <div class="card-body">
-                    <canvas id="skewChart" data-plot="{{ plot }}"></canvas>
-                    <img src="{{ url_for('plot_data', id=tab.id) }}" alt="skew plot">
+                    <div class="row">
+                        <div class="col-md">
+                            <canvas id="normalSkewChart" data-plot1="{{ plot }}"></canvas>
+                        </div>
+                        <div class="col-md">
+                            <canvas id="cumulativeSkewChart" data-plot2="{{ plot }}"></canvas>
+                        </div>
+                    </div>
+                    <hr class="small">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p>Total lenght: {{ tab.plot.len }} | {{ tab.settings.n1 }}{{ tab.settings.n2 }}-content: {{ tab.plot.content }}% | oriC: {{ tab.plot.skew_cumulative|min }}</p>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Download</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url_for('download_plot', id=tab.id) }}">Plot as PNG</a>
+                                <a class="dropdown-item" href="#">Data as TXT</a>
+                            </div>
+                            <a class="btn btn-warning" role="button" href="{{ url_for('delete_tab', id=tab.id) }}">Close File</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
