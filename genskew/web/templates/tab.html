@@ -1,9 +1,14 @@
 {%- extends "base.html" %}
 
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="{{ url_for('static', filename='chart.js') }}"></script>
+{% endblock %}
+
 {% block title %}{{ tab.title }}{% endblock %}
 
 {% block content %}
-    <div id="content" class="container">
+    <div class="container">
         <div class="d-flex justify-content-between">
             <div>
                 <h2>{{ tab.title }}</h2>
@@ -15,9 +20,9 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <a class="card-link" data-toggle="collapse" href="#settings">Settings</a>
+                <a class="card-link" data-toggle="collapse" href="#settings">Sequence details & plot settings</a>
             </div>
-            <div id="settings" class="collapse show" data-parent="#content">
+            <div id="settings" class="collapse show">
                 <div class="card-body">
                     {% include 'tab_settings.html' %}
                 </div>
@@ -28,9 +33,10 @@
             <div class="card-header">
                 <a class="card-link" data-toggle="collapse" href="#plot">Plot</a>
             </div>
-            <div id="plot" class="collapse" data-parent="#content">
+            <div id="plot" class="collapse show">
                 <div class="card-body">
-                    
+                    <canvas id="skewChart" data-plot="{{ plot }}"></canvas>
+                    <img src="{{ url_for('plot_data', id=tab.id) }}" alt="skew plot">
                 </div>
             </div>
         </div>

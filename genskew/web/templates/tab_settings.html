@@ -1,10 +1,10 @@
 <form method="post" role="form">
     <div class="form-group required">
-        <p>Select sequence(s) to be analysed</p>
-        {% for seq in tab.sequences.values() %}
+        <p>Select sequence(s)/contig(s) to be analysed</p>
+        {% for seq in tab.sequences %}
             <div class="form-group custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="input-{{ seq.id }}" aria-describedby="desc-{{ seq.id }}" name="{{ seq.id }}" {% if seq.enabled %}checked{% endif %}>
-                <label class="custom-control-label" for="input-{{ seq.id }}">{{ seq.name }}</label>
+                <label class="custom-control-label" for="input-{{ seq.id }}">{{ seq.name }} | Len: {{ seq.len }}</label>
                 <small id="desc-{{ seq.id }}" class="form-text text-muted">{{ seq.desc }}</small>
             </div>
         {% endfor %}

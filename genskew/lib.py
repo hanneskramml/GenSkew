@@ -1,17 +1,38 @@
-from genskew import log
-from genskew.input import SeqLoader
-from genskew.utils import compute_skew_data
-from genskew.config import Config
+""" GenSkew lib: Module for using the app as python library """
+
+from Bio import SeqIO
+from matplotlib import pyplot
+from genskew import utils
 
 
 class GenSkew:
 
-    @staticmethod
-    def plot(seqfile, n1=Config.DEFAULT_N1, n2=Config.DEFAULT_N2, window=Config.DEFAULT_WINDOWSIZE,
-             step=Config.DEFAULT_STEPSIZE, output='plot.png'):
+    DEFAULT_N1 = 'G'
+    DEFAULT_N2 = 'C'
+    DEFAULT_WINDOWSIZE = 1000
+    DEFAULT_STEPSIZE = 1000
 
-        skew_data = {}
-        for seq in SeqLoader.parse(seqfile):
-            skew_data[seq.id] = compute_skew_data(seq.data, n1, n2, window, step)
+    @classmethod
+    def plot(cls, seqfile, n1=DEFAULT_N1, n2=DEFAULT_N2, window=None, step=None):
+        """Plot skew data ...tba"""
 
-        log.debug(skew_data)
+        seq_recs = [str(seq.seq) for seq in SeqIO.parse(seqfile, 'fasta')]
+        pseudo_contig = ''.join(seq_recs)
+
+        separators = []
+        for i in range(0, len(seq_recs[1:])):
+            if i == 0:
+                separators.append(len(seq_recs[i]) + 1)
+            else:
+                separators.append(separators[i-1] + len(seq_recs[i]) + 1)
+
+        if not window:
+            window = int(len(pseudo_contig) / cls.DEFAULT_WINDOWSIZE)
+        if not step:
+            step = int(len(pseudo_contig) / cls.DEFAULT_STEPSIZE)
+
+        position, skew_normal, skew_cumulative = utils.compute_skew_data(pseudo_contig, n1, n2, window, step)
+
+        fig = pyplot.figure()
+        utils.draw_figure(fig, position, skew_normal, skew_cumulative, separators)
+        pyplot.show()

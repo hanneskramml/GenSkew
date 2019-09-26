@@ -3,6 +3,7 @@ from Bio import SeqIO
 from genskew import log
 
 
+# TODO: code refactoring
 class SeqLoader:
 
     class Sequence:
@@ -36,4 +37,3 @@ class SeqLoader:
 
         log.debug("%i sequence record(s) loaded", len(seqs))
         return seqs
-

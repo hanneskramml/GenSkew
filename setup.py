@@ -17,7 +17,8 @@ setup(
     # package_dir={'genskew': 'src'},
     packages=['genskew', 'genskew.cli'],
     install_requires=[
-        'biopython'
+        'biopython',
+        'matplotlib'
     ],
     extras_require={
         'WebGUI': ['genskew.web', 'flask', 'bootstrap-flask', 'flask-kvsession', 'flask-wtf']
