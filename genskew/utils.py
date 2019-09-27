@@ -28,6 +28,19 @@ def compute_skew_data(seq, n1, n2, window, step):
     return position, skew_normal, skew_cumulative
 
 
+def compute_gc_content(seq):
+    """Compute GC nucleotide content for a given (pseudo-)contig"""
+
+    n_gc = sum(seq.count(x) for x in ['G', 'g', 'C', 'c'])
+
+    try:
+        content = n_gc * 100.0 / len(seq)
+    except ZeroDivisionError:
+        content = 0.0
+
+    return content
+
+
 def draw_figure(fig, x_seq_position, y_skew_normal, y_skew_cumulative, x_contig_separators=None):
     """Create/draw matplotlib figure ...tba"""
 

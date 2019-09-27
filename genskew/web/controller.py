@@ -31,11 +31,15 @@ def new_tab():
             seqlen += seq.len
             tab.sequences.append(seq.__dict__)
 
+        # TODO: proper error handling
+        if seqlen == 0:
+            return redirect(url_for('index'))
+
         tab.settings = Settings(seqlen).__dict__
         session[tab.id] = json.dumps(tab.__dict__)
         return redirect(url_for('show_tab', id=tab.id))
 
-    return redirect(url_for('index', navitems=__get_nav_items(), newTabForm=form))
+    return redirect(url_for('index'))
 
 
 # TODO: code refactoring
@@ -68,21 +72,21 @@ def show_tab(id):
     pseudo_contig = ''.join(seq_recs)
 
     plot = PlotData()
-    plot.len = len(pseudo_contig)
-
     for i in range(0, len(seq_recs[1:])):
         if i == 0:
-            plot.contig_separators.append(len(seq_recs[i]) + 1)
+            plot.contig_start_pos.append(len(seq_recs[i]) + 1)
         else:
-            plot.contig_separators.append(plot.contig_separators[i - 1] + len(seq_recs[i]) + 1)
+            plot.contig_start_pos.append(plot.contig_start_pos[i - 1] + len(seq_recs[i]) + 1)
 
-    plot.seq_position, plot.skew_normal, plot.skew_cumulative = \
+    plot.total_len = len(pseudo_contig)
+    plot.gc_content = round(utils.compute_gc_content(pseudo_contig), 1)
+    plot.x_seq_position, plot.y_skew_normal, plot.y_skew_cumulative = \
         utils.compute_skew_data(pseudo_contig, tab['settings']['n1'], tab['settings']['n2'],
                           tab['settings']['windowsize'], tab['settings']['stepsize'])
 
     tab['plot'] = plot.__dict__
     session[id] = json.dumps(tab)
-    return render_template('tab.html', navitems=__get_nav_items(), tab=tab, newTabForm=NewTabForm(), plot=json.dumps(plot.get_plot_data()))
+    return render_template('tab.html', navitems=__get_nav_items(), tab=tab, newTabForm=NewTabForm(), plot=json.dumps(plot.get_plot_data()), origin=plot.get_pos_for_origin())
 
 
 @app.route('/tab/<id>/plot', methods=['GET'])
@@ -95,8 +99,8 @@ def download_plot(id):
     tab = json.loads(data)
 
     fig = Figure(dpi=150)
-    utils.draw_figure(fig, tab['plot']['seq_position'], tab['plot']['skew_normal'], tab['plot']['skew_cumulative'],
-                      tab['plot']['contig_separators'])
+    utils.draw_figure(fig, tab['plot']['x_seq_position'], tab['plot']['y_skew_normal'], tab['plot']['y_skew_cumulative'],
+                      tab['plot']['contig_start_pos'])
 
     out = BytesIO()
     FigureCanvasAgg(fig).print_png(out)

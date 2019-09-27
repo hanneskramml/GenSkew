@@ -34,19 +34,23 @@ class Sequence:
 
 class PlotData(object):
     def __init__(self) -> None:
-        self.seq_position = []
-        self.skew_normal = []
-        self.skew_cumulative = []
-        self.contig_separators = []
-        self.content = 0
-        self.len = 0
+        self.total_len = 0
+        self.gc_content = 0
+        self.contig_start_pos = []
+        self.x_seq_position = []
+        self.y_skew_normal = []
+        self.y_skew_cumulative = []
 
     def get_plot_data(self):
         skew_normal = []
         skew_cumulative = []
 
-        for i in range(0, len(self.seq_position)):
-            skew_normal.append({'x': self.seq_position[i], 'y': round(self.skew_normal[i], 3)})
-            skew_cumulative.append({'x': self.seq_position[i], 'y': round(self.skew_cumulative[i], 3)})
+        for i in range(0, len(self.x_seq_position)):
+            skew_normal.append({'x': self.x_seq_position[i], 'y': round(self.y_skew_normal[i], 3)})
+            skew_cumulative.append({'x': self.x_seq_position[i], 'y': round(self.y_skew_cumulative[i], 3)})
 
-        return {'skew_normal': skew_normal, 'skew_cumulative': skew_cumulative}
+        return {'origin': self.get_pos_for_origin(), 'separator_pos': self.contig_start_pos,
+                'skew_normal': skew_normal, 'skew_cumulative': skew_cumulative}
+
+    def get_pos_for_origin(self):
+        return self.x_seq_position[self.y_skew_cumulative.index(min(self.y_skew_cumulative))]
