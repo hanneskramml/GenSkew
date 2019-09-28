@@ -6,40 +6,36 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from genskew.web import app
 from genskew.web.model import Tab, Settings, PlotData
-from genskew.web.forms import NewTabForm
 from genskew.input import SeqLoader
 from genskew import utils
 
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', navitems=__get_nav_items(), newTabForm=NewTabForm())
+    return render_template('index.html', navitems=__get_nav_items())
 
 
 @app.route('/new', methods=['POST'])
 def new_tab():
-    form = NewTabForm()
 
-    if form.validate_on_submit():
-        file = request.files.get('file')
-        tab = Tab(file.filename)
-        if form.title.data:
-            tab.title = form.title.data
+    file = request.files.get('file')
+    tab = Tab(file.filename)
+    if request.form.get('title'):
+        tab.title = request.form.get('title')
 
-        seqlen = 0
-        for seq in SeqLoader.parse(TextIOWrapper(file)):
-            seqlen += seq.len
-            tab.sequences.append(seq.__dict__)
+    seqlen = 0
+    for seq in SeqLoader.parse(TextIOWrapper(file)):
+        seqlen += seq.len
+        tab.sequences.append(seq.__dict__)
 
-        # TODO: proper error handling
-        if seqlen == 0:
-            return redirect(url_for('index'))
+    # TODO: proper error handling
+    if seqlen == 0:
+        return redirect(url_for('index'))
 
-        tab.settings = Settings(seqlen).__dict__
-        session[tab.id] = json.dumps(tab.__dict__)
-        return redirect(url_for('show_tab', id=tab.id))
+    tab.settings = Settings(seqlen).__dict__
+    session[tab.id] = json.dumps(tab.__dict__)
 
-    return redirect(url_for('index'))
+    return redirect(url_for('show_tab', id=tab.id))
 
 
 # TODO: code refactoring
@@ -86,7 +82,7 @@ def show_tab(id):
 
     tab['plot'] = plot.__dict__
     session[id] = json.dumps(tab)
-    return render_template('tab.html', navitems=__get_nav_items(), tab=tab, newTabForm=NewTabForm(), plot=json.dumps(plot.get_plot_data()), origin=plot.get_pos_for_origin())
+    return render_template('tab.html', navitems=__get_nav_items(), tab=tab, plot=json.dumps(plot.get_plot_data()), origin=plot.get_pos_for_origin())
 
 
 @app.route('/tab/<id>/plot', methods=['GET'])

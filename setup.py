@@ -21,7 +21,7 @@ setup(
         'matplotlib'
     ],
     extras_require={
-        'WebGUI': ['genskew.web', 'flask', 'bootstrap-flask', 'flask-kvsession', 'flask-wtf']
+        'WebGUI': ['genskew.web', 'flask', 'flask-kvsession']
     },
     entry_points={'console_scripts': ['genskew = genskew.cli.cli:main']}
 )
