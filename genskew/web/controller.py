@@ -42,7 +42,6 @@ def new_tab():
     return redirect(url_for('show_tab', id=tab.id))
 
 
-# TODO: code refactoring
 @app.route('/tab/<id>', methods=['GET', 'POST'])
 def show_tab(id):
     data = session.get(id, None)

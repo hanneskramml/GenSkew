@@ -2,7 +2,7 @@ import json
 from uuid import uuid1
 from Bio import SeqRecord
 from datetime import datetime as dt
-from genskew.lib import GenSkew as gs
+from genskew.lib import GenSkew
 
 
 class SeqFile(object):
@@ -69,15 +69,15 @@ class ContigPlot(object):
 
 class Settings(object):
     def __init__(self, seqlen) -> None:
-        self.n1 = gs.DEFAULT_N1
-        self.n2 = gs.DEFAULT_N2
+        self.n1 = GenSkew.DEFAULT_N1
+        self.n2 = GenSkew.DEFAULT_N2
         self.windowsize = 0
         self.stepsize = 0
         self.set_default_windowsize(seqlen)
-        self.set_default_setpsize(seqlen)
+        self.set_default_stepsize(seqlen)
 
     def set_default_windowsize(self, seqlen):
-        self.windowsize = int(seqlen / gs.DEFAULT_WINDOWSIZE)
+        self.windowsize = int(seqlen / GenSkew.DEFAULT_WINDOWSIZE)
 
-    def set_default_setpsize(self, seqlen):
-        self.stepsize = int(seqlen / gs.DEFAULT_STEPSIZE)
+    def set_default_stepsize(self, seqlen):
+        self.stepsize = int(seqlen / GenSkew.DEFAULT_STEPSIZE)
