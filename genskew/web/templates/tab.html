@@ -15,7 +15,7 @@
                 <h2>{{ tab.title }}</h2>
             </div>
             <div>
-                <span class="badge badge-primary float-right">{{ tab.sequences|length }} sequence(s)</span><br>
+                <span class="badge badge-primary float-right">{{ tab.seqs|length }} sequence(s)</span><br>
                 <p>Created on: {{ tab.timestamp }}</p>
             </div>
         </div>
@@ -38,16 +38,16 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md">
-                            <canvas id="normalSkewChart" data-plot="{{ plot }}"></canvas>
+                            <canvas id="normalSkewChart" data-plot="{{ tab.plot.get_plot_data() }}"></canvas>
                         </div>
                         <div class="col-md">
-                            <canvas id="cumulativeSkewChart" data-plot="{{ plot }}"></canvas>
+                            <canvas id="cumulativeSkewChart" data-plot="{{ tab.plot.get_plot_data() }}"></canvas>
                         </div>
                     </div>
                     <hr class="small">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <p>Total lenght: {{ tab.plot.total_len }} | GC-content: {{ tab.plot.gc_content }}% | oriC: {{ origin }}</p>
+                            <p>Total lenght: {{ tab.plot.get_total_len() }} | GC-content: {{ tab.plot.gc_content }}% | oriC: {{ tab.plot.get_origin() }}</p>
                         </div>
                         <div class="dropdown">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Download</button>

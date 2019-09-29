@@ -41,7 +41,7 @@ def compute_gc_content(seq):
     return content
 
 
-def draw_figure(fig, x_seq_position, y_skew_normal, y_skew_cumulative, x_contig_separators=None):
+def draw_figure(fig, x_seq_position, y_skew_normal, y_skew_cumulative, x_contig_separators):
     """Create/draw matplotlib figure ...tba"""
 
     plt1 = fig.add_subplot(2, 1, 1)
@@ -56,8 +56,6 @@ def draw_figure(fig, x_seq_position, y_skew_normal, y_skew_cumulative, x_contig_
     plt2.grid()
     plt2.legend()
 
-    if x_contig_separators is None:
-        x_contig_separators = []
     for pos in x_contig_separators:
         plt1.axvline(x=pos, color='tab:brown', linestyle=':')
         plt2.axvline(x=pos, color='tab:brown', linestyle=':')

@@ -2,14 +2,14 @@
     <div class="row">
         <div class="col-md-8">
             <div style="border-right: 1px solid #ddd;">
-                <p><em>Select contig(s) to be analysed{% if tab.sequences|length > 2 %} (only 2/{{ tab.sequences|length }} records are displayed){% endif %}</em></p>
+                <p><em>Select contig(s) to be analysed{% if tab.seqs|length > 2 %} (only 2/{{ tab.seqs|length }} records are displayed){% endif %}</em></p>
                 <div class="form-group required">
-                {% for seq in tab.sequences %}
+                {% for seq in tab.seqs %}
                     {% if loop.index0 < 2 %}
                     <div class="form-group custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="input-{{ seq.id }}" aria-describedby="desc-{{ seq.id }}" name="{{ seq.id }}" checked disabled>
-                        <label class="custom-control-label" for="input-{{ seq.id }}">{{ seq.name }} | Len: {{ seq.len }}</label>
-                        <small id="desc-{{ seq.id }}" class="form-text text-muted">{{ seq.desc }}</small>
+                        <label class="custom-control-label" for="input-{{ seq.id }}">{{ seq.name }} | Len: {{ seq|length }}</label>
+                        <small id="desc-{{ seq.id }}" class="form-text text-muted">{{ seq.description }}</small>
                     </div>
                     {% endif %}
                 {% endfor %}
@@ -25,16 +25,16 @@
                             <span class="input-group-text">Nucleotides</span>
                         </div>
                         <select id="n1" name="n1" class="custom-select custom-select-sm">
-                            <option {% if tab.settings.n1 == 'G' %}selected{% endif %}>G</option>
-                            <option {% if tab.settings.n1 == 'C' %}selected{% endif %}>C</option>
-                            <option {% if tab.settings.n1 == 'A' %}selected{% endif %}>A</option>
-                            <option {% if tab.settings.n1 == 'T' %}selected{% endif %}>T</option>
+                            <option {% if tab.plot.settings.n1 == 'G' %}selected{% endif %}>G</option>
+                            <option {% if tab.plot.settings.n1 == 'C' %}selected{% endif %}>C</option>
+                            <option {% if tab.plot.settings.n1 == 'A' %}selected{% endif %}>A</option>
+                            <option {% if tab.plot.settings.n1 == 'T' %}selected{% endif %}>T</option>
                         </select>
                         <select id="n2" name="n2" class="custom-select custom-select-sm">
-                            <option {% if tab.settings.n2 == 'G' %}selected{% endif %}>G</option>
-                            <option {% if tab.settings.n2 == 'C' %}selected{% endif %}>C</option>
-                            <option {% if tab.settings.n2 == 'A' %}selected{% endif %}>A</option>
-                            <option {% if tab.settings.n2 == 'T' %}selected{% endif %}>T</option>
+                            <option {% if tab.plot.settings.n2 == 'G' %}selected{% endif %}>G</option>
+                            <option {% if tab.plot.settings.n2 == 'C' %}selected{% endif %}>C</option>
+                            <option {% if tab.plot.settings.n2 == 'A' %}selected{% endif %}>A</option>
+                            <option {% if tab.plot.settings.n2 == 'T' %}selected{% endif %}>T</option>
                         </select>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Windowsize</span>
                         </div>
-                        <input type="text" class="form-control form-control-sm" id="windowsize" name="windowsize" placeholder="{{ tab.settings.windowsize }}" style="min-width: 50px;">
+                        <input type="text" class="form-control form-control-sm" id="windowsize" name="windowsize" placeholder="{{ tab.plot.settings.windowsize }}" style="min-width: 50px;">
                     </div>
                 </div>
                 <div class="col-md">
@@ -53,7 +53,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Stepsize</span>
                         </div>
-                        <input type="text" class="form-control form-control-sm" id="stepsize" name="stepsize" placeholder="{{ tab.settings.stepsize }}" style="min-width: 60px;">
+                        <input type="text" class="form-control form-control-sm" id="stepsize" name="stepsize" placeholder="{{ tab.plot.settings.stepsize }}" style="min-width: 60px;">
                     </div>
                 </div>
             </div>
