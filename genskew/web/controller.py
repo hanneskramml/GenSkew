@@ -1,5 +1,5 @@
-import jsonpickle
-from io import TextIOWrapper, BytesIO
+import jsonpickle, csv
+from io import TextIOWrapper, BytesIO, StringIO
 from flask import render_template, redirect, url_for, session, request, Response
 from Bio import SeqIO, SeqRecord
 from matplotlib.figure import Figure
@@ -82,6 +82,25 @@ def download_plot(id):
     FigureCanvasAgg(fig).print_png(out)
 
     return Response(out.getvalue(), mimetype='image/png')
+
+
+@app.route('/tab/<id>/data', methods=['GET'])
+def download_data(id):
+    data = session.get(id, None)
+    if data is None:
+        return redirect(url_for('index'))
+
+    tab = jsonpickle.decode(data)
+
+    out = StringIO()
+    cw = csv.writer(out)
+
+    cw.writerow(['Position', 'Skew_normal', 'Skew_cumulative'])
+    for i in range(0, len(tab.plot.x_position)):
+        cw.writerow([tab.plot.x_position[i], tab.plot.y_skew_normal[i], tab.plot.y_skew_cumulative[i]])
+
+    return Response(out.getvalue(), mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment; filename=data.csv'})
 
 
 @app.route('/tab/<id>/reset', methods=['GET'])

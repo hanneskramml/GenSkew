@@ -53,7 +53,7 @@
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Download</button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{{ url_for('download_plot', id=tab.id) }}">Plot as PNG</a>
-                                <a class="dropdown-item" href="#">Data as TXT</a>
+                                <a class="dropdown-item" href="{{ url_for('download_data', id=tab.id) }}">Data as CSV</a>
                             </div>
                             <a class="btn btn-warning" role="button" href="{{ url_for('delete_tab', id=tab.id) }}">Close File</a>
                         </div>
