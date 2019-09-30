@@ -28,7 +28,7 @@ class SeqRec(SeqRecord.SeqRecord):
 class ContigPlot(object):
     def __init__(self, seqs) -> None:
         self.seqs = seqs
-        self.settings = Settings(self.get_total_len())
+        self.settings = None
         self.gc_content = 0
         self.x_position = []
         self.y_skew_normal = []
@@ -68,16 +68,20 @@ class ContigPlot(object):
 
 
 class Settings(object):
-    def __init__(self, seqlen) -> None:
+    def __init__(self, plot) -> None:
+        self.plot = plot
         self.n1 = GenSkew.DEFAULT_N1
         self.n2 = GenSkew.DEFAULT_N2
         self.windowsize = 0
         self.stepsize = 0
-        self.set_default_windowsize(seqlen)
-        self.set_default_stepsize(seqlen)
+        self.set_default_size()
 
-    def set_default_windowsize(self, seqlen):
-        self.windowsize = int(seqlen / GenSkew.DEFAULT_WINDOWSIZE)
+    def set_default_size(self):
+        contig_len = self.plot.get_total_len()
+        self.windowsize = int(contig_len / GenSkew.DEFAULT_WINDOWSIZE)
+        self.stepsize = int(contig_len / GenSkew.DEFAULT_STEPSIZE)
 
-    def set_default_stepsize(self, seqlen):
-        self.stepsize = int(seqlen / GenSkew.DEFAULT_STEPSIZE)
+    def reset_all(self):
+        self.n1 = GenSkew.DEFAULT_N1
+        self.n2 = GenSkew.DEFAULT_N2
+        self.set_default_size()

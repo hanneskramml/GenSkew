@@ -62,6 +62,6 @@
     <hr class="small">
     <div class="d-flex justify-content-end">
         <input class="btn btn-primary" id="submit" name="submit" type="submit" value="Apply & Reload">
-        <a class="btn btn-warning" role="button" href="#" style="margin-left:5px">Reset</a>
+        <a class="btn btn-outline-secondary" role="button" href="{{ url_for('reset_settings', id=tab.id) }}" style="margin-left:5px">Reset</a>
     </div>
 </form>

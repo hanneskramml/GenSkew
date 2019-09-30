@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from genskew.web import app
-from genskew.web.model import SeqFile, SeqRec, ContigPlot
+from genskew.web.model import SeqFile, SeqRec, ContigPlot, Settings
 from genskew import utils
 
 
@@ -31,12 +31,8 @@ def new_tab():
         return redirect(url_for('index'))
 
     tab.plot = ContigPlot(tab.seqs)
-    pseudo_contig = tab.plot.get_pseudo_contig()
-
-    tab.plot.gc_content = round(utils.compute_gc_content(pseudo_contig), 1)
-    tab.plot.x_position, tab.plot.y_skew_normal, tab.plot.y_skew_cumulative = \
-        utils.compute_skew_data(pseudo_contig, tab.plot.settings.n1, tab.plot.settings.n2,
-                                tab.plot.settings.windowsize, tab.plot.settings.stepsize)
+    tab.plot.settings = Settings(tab.plot)
+    __compute_data(tab)
 
     session[tab.id] = jsonpickle.encode(tab)
     return redirect(url_for('show_tab', id=tab.id))
@@ -60,20 +56,11 @@ def show_tab(id):
 
         if request.form.get('windowsize'):
             tab.plot.settings.windowsize = int(request.form.get('windowsize'))
-        else:
-            tab.plot.settings.set_default_windowsize(tab.plot.get_total_len())
 
         if request.form.get('stepsize'):
             tab.plot.settings.stepsize = int(request.form.get('stepsize'))
-        else:
-            tab.plot.settings.set_default_stepsize(tab.plot.get_total_len())
 
-        pseudo_contig = tab.plot.get_pseudo_contig()
-        tab.plot.gc_content = round(utils.compute_gc_content(pseudo_contig), 1)
-        tab.plot.x_position, tab.plot.y_skew_normal, tab.plot.y_skew_cumulative = \
-            utils.compute_skew_data(pseudo_contig, tab.plot.settings.n1, tab.plot.settings.n2,
-                                    tab.plot.settings.windowsize, tab.plot.settings.stepsize)
-
+        __compute_data(tab)
         session[tab.id] = jsonpickle.encode(tab)
 
     return render_template('tab.html', nav=__get_nav_tabs(), tab=tab)
@@ -83,7 +70,6 @@ def show_tab(id):
 def download_plot(id):
     data = session.get(id, None)
     if data is None:
-        # TODO: show error (session expired?)
         return redirect(url_for('index'))
 
     tab = jsonpickle.decode(data)
@@ -96,6 +82,21 @@ def download_plot(id):
     FigureCanvasAgg(fig).print_png(out)
 
     return Response(out.getvalue(), mimetype='image/png')
+
+
+@app.route('/tab/<id>/reset', methods=['GET'])
+def reset_settings(id):
+    data = session.get(id, None)
+    if data is None:
+        return redirect(url_for('index'))
+
+    tab = jsonpickle.decode(data)
+
+    tab.plot.settings.reset_all()
+    __compute_data(tab)
+
+    session[tab.id] = jsonpickle.encode(tab)
+    return redirect(url_for('show_tab', id=tab.id))
 
 
 @app.route('/tab/<id>/delete', methods=['GET'])
@@ -119,3 +120,12 @@ def __get_nav_tabs():
             navitems.append({'id': tab.id, 'title': tab.title})
 
     return navitems
+
+
+def __compute_data(tab):
+    pseudo_contig = tab.plot.get_pseudo_contig()
+
+    tab.plot.gc_content = round(utils.compute_gc_content(pseudo_contig), 1)
+    tab.plot.x_position, tab.plot.y_skew_normal, tab.plot.y_skew_cumulative = \
+        utils.compute_skew_data(pseudo_contig, tab.plot.settings.n1, tab.plot.settings.n2,
+                                tab.plot.settings.windowsize, tab.plot.settings.stepsize)

@@ -23,5 +23,9 @@ setup(
     extras_require={
         'WebGUI': ['genskew.web', 'flask', 'flask-kvsession', 'jsonpickle']
     },
+    include_package_data=True,
+    package_data={
+        'genskew.web': ['static/*', 'templates/*'],
+    },
     entry_points={'console_scripts': ['genskew = genskew.cli.cli:main']}
 )
