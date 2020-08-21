@@ -46,20 +46,28 @@ def draw_figure(fig, x_seq_position, y_skew_normal, y_skew_cumulative, x_contig_
 
     plt1 = fig.add_subplot(2, 1, 1)
 
-    plt1.plot(x_seq_position, y_skew_normal, label='normal', color='tab:blue')
+    plt1.plot(x_seq_position, y_skew_normal, label='normal skew', color='tab:blue', linewidth=0.5)
     plt1.xaxis.set_ticklabels([])
     plt1.grid()
     plt1.legend()
 
     plt2 = fig.add_subplot(2, 1, 2)
-    plt2.plot(x_seq_position, y_skew_cumulative, label='cumulative', color='tab:orange')
+    plt2.plot(x_seq_position, y_skew_cumulative, label='cumulative skew', color='tab:orange')
+    plt2.axes.ticklabel_format(style='plain')
     plt2.grid()
-    plt2.legend()
+    #plt2.legend()
+    #plt2.set_xlabel('position in sequence')
 
     for pos in x_contig_separators:
         plt1.axvline(x=pos, color='tab:brown', linestyle=':')
         plt2.axvline(x=pos, color='tab:brown', linestyle=':')
 
     i_min = y_skew_cumulative.index(min(y_skew_cumulative))
-    plt1.axvline(x=x_seq_position[i_min], color='tab:red', linestyle='-')
-    plt2.axvline(x=x_seq_position[i_min], color='tab:red', linestyle='-')
+    i_max = y_skew_cumulative.index(max(y_skew_cumulative))
+
+    plt1.axvline(x=x_seq_position[i_min], color='tab:red', linestyle='-', linewidth=1)
+    plt1.axvline(x=x_seq_position[i_max], color='tab:red', linestyle='-', linewidth=1)
+
+    plt2.axvline(x=x_seq_position[i_min], color='tab:red', linestyle='-', linewidth=1, label='origin: {}'.format(x_seq_position[i_min]))
+    plt2.axvline(x=x_seq_position[i_max], color='tab:red', linestyle='-', linewidth=1, label='terminus: {}'.format(x_seq_position[i_max]))
+    plt2.legend()

@@ -29,6 +29,21 @@ drawHLines.push({
         content: 'origin'
     }
 });
+drawHLines.push({
+    type: 'line',
+    mode: 'vertical',
+    scaleID: 'x-axis-0',
+    value: data.terminus,
+    borderColor: 'rgba(255, 0, 0, 0.5)',
+    borderWidth: 2,
+    label: {
+        enabled: true,
+        position: 'bottom',
+        yAdjust: 10,
+        fontStyle: 'normal',
+        content: 'terminus'
+    }
+});
 
 var chartOptions = {
     responsive: true,

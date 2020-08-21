@@ -55,6 +55,9 @@ class ContigPlot(object):
     def get_origin(self):
         return self.x_position[self.y_skew_cumulative.index(min(self.y_skew_cumulative))]
 
+    def get_terminus(self):
+        return self.x_position[self.y_skew_cumulative.index(max(self.y_skew_cumulative))]
+
     def get_plot_data(self):
         skew_normal = []
         skew_cumulative = []
@@ -63,8 +66,8 @@ class ContigPlot(object):
             skew_normal.append({'x': self.x_position[i], 'y': round(self.y_skew_normal[i], 3)})
             skew_cumulative.append({'x': self.x_position[i], 'y': round(self.y_skew_cumulative[i], 3)})
 
-        return json.dumps({'origin': self.get_origin(), 'separator_pos': self.get_start_pos()[1:],
-                           'skew_normal': skew_normal, 'skew_cumulative': skew_cumulative})
+        return json.dumps({'skew_normal': skew_normal, 'skew_cumulative': skew_cumulative,
+                           'separator_pos': self.get_start_pos()[1:], 'origin': self.get_origin(), 'terminus': self.get_terminus()})
 
 
 class Settings(object):
